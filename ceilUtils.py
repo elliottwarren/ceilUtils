@@ -19,7 +19,7 @@ import numpy as np
 site_bsc = {'CL31-A_KSS45W': 64.3 - 31.4, 'CL31-A_IMU': 92.1 - 21.6, 'CL31-B_RGS': 28.1 - 19.4, 'CL31-C_MR': 32.0 - 27.5,
             'CL31-D_NK': 27.0 - 23.2, 'CL31-E_NK': 27.0 - 23.2, 'CL31-D_SWT': 44.5 - 3.1}
 # above ground level
-site_bsc_agl = {'CL31-A_KSS45W': 64.3 - 31.4, 'CL31-A_IMU': 92.1 - 21.6, 'CL31-B_RGS': 28.1 - 19.4, 'CL31-C_MR': 32.0 - 27.5,
+site_bsc_agl = {'CL31-A_KSS45W': 64.3 - 32.4, 'CL31-A_IMU': 92.1 - 21.6, 'CL31-B_RGS': 28.1 - 19.4, 'CL31-C_MR': 32.0 - 27.5,
             'CL31-D_NK': 27.0 - 23.2, 'CL31-E_NK': 27.0 - 23.2, 'CL31-D_SWT': 44.5 - 3.1}
 # above sea level
 site_bsc_asl = {'CL31-A_KSS45W': 64.3, 'CL31-A_IMU': 92.1, 'CL31-B_RGS': 28.1, 'CL31-C_MR': 32.0,
@@ -122,7 +122,7 @@ def time_match_data(data_obs, **kwargs):
     :return: data_obs:
     """
 
-    from ellUtils import binary_search
+    from ellUtils.ellUtils import binary_search
 
     # find nearest time in ceil time
     # pull out ALL the nearest time idxs and differences
@@ -192,7 +192,7 @@ def calibrate_BSC_data(bsc_obs, site, day):
     :return:
     """
 
-    from ellUtils import netCDF_read
+    from ellUtils.ellUtils import netCDF_read
 
     # site id (short) and site str in filename
     split = site.split('_')
@@ -220,6 +220,28 @@ def calibrate_BSC_data(bsc_obs, site, day):
 # Main read in functions
 # --------------------------
 
+# Metadata
+def read_ceil_metadata(datadir, loc_filename='CeilsCSV.csv'):
+
+    """
+    Read in ceil metadata (lon, lat) into a dictionary
+    :param datadir:
+    :return:
+    """
+
+    from ellUtils.ellUtils import csv_read
+
+    # read in the ceil locations
+    loc_fname = datadir + loc_filename
+
+    ceil_rawmeta = csv_read(loc_fname)
+
+    # convert into dictionary - [lon, lat]
+    ceil_metadata = {i[1]: [float(i[3]), float(i[4])] for i in ceil_rawmeta}
+
+
+    return ceil_metadata
+
 # read in one BSC ceil obs file
 def netCDF_read_BSC(datapath, site, height, day, var_type='beta_tR', SNRcorrect=True, **kwargs):
 
@@ -245,7 +267,7 @@ def netCDF_read_BSC(datapath, site, height, day, var_type='beta_tR', SNRcorrect=
     from netCDF4 import Dataset
     import datetime as dt
     from dateutil import tz
-    from ellUtils import time_to_datetime
+    from ellUtils.ellUtils import time_to_datetime
 
     ## Read data in
     # ------------------------
@@ -425,7 +447,7 @@ def netCDF_read_ceil(datapath, ins_height, ftype, **kwargs):
     from netCDF4 import Dataset
     import datetime as dt
     from dateutil import tz
-    from ellUtils import time_to_datetime, get_all_varaible_names
+    from ellUtils.ellUtils import time_to_datetime, get_all_varaible_names
 
     def masked_to_nan_array(datafile, var_i):
 
@@ -525,7 +547,7 @@ def read_all_ceils_BSC(day, site_bsc, ceilDatadir, calib=True, var_type='beta_tR
     """
 
     from os.path import exists
-    from ellUtils import nearest, binary_search
+    from ellUtils.ellUtils import nearest, binary_search
 
     # contains all the sites time-upscaled data
     bsc_obs = {}
@@ -594,7 +616,7 @@ def read_all_ceils(day, site_bsc, ceilDatadir, ftype, calib=True, **kwargs):
     """
 
     from os.path import exists
-    from ellUtils import nearest, binary_search, netCDF_read
+    from ellUtils.ellUtils import nearest, binary_search, netCDF_read
 
     # contains all the sites time-upscaled data
     all_data_obs = {}

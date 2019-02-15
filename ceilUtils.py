@@ -6,6 +6,15 @@
 # module imports needed to run the function
 
 import numpy as np
+import sys
+
+if sys.platform == 'linux2':
+    sys.path.append('/net/home/mm0100/ewarren/Documents/AerosolBackMod/scripts/ellUtils') # general utils
+    import ellUtils as eu
+else:
+    from ellUtils import ellUtils as eu
+
+
 
 # --------------------------
 # Constants to do with ceilometer
@@ -229,12 +238,10 @@ def read_ceil_metadata(datadir, loc_filename='CeilsCSV.csv'):
     :return:
     """
 
-    from ellUtils.ellUtils import csv_read
-
     # read in the ceil locations
     loc_fname = datadir + loc_filename
 
-    ceil_rawmeta = csv_read(loc_fname)
+    ceil_rawmeta = eu.csv_read(loc_fname)
 
     # convert into dictionary - [lon, lat]
     ceil_metadata = {i[1]: [float(i[3]), float(i[4])] for i in ceil_rawmeta}
@@ -267,7 +274,7 @@ def netCDF_read_BSC(datapath, site, height, day, var_type='beta_tR', SNRcorrect=
     from netCDF4 import Dataset
     import datetime as dt
     from dateutil import tz
-    from ellUtils.ellUtils import time_to_datetime
+
 
     ## Read data in
     # ------------------------
@@ -323,7 +330,7 @@ def netCDF_read_BSC(datapath, site, height, day, var_type='beta_tR', SNRcorrect=
     # get time units for time conversion
     tstr = datafile.variables['time'].units
     rawtime = np.squeeze(datafile.variables['time'][:])
-    data['time'] = np.array(time_to_datetime(tstr, rawtime))
+    data['time'] = np.array(eu.time_to_datetime(tstr, rawtime))
     #data['time'] = np.array([i.replace(tzinfo=tz.gettz('UTC')) for i in data['time']])
 
     # calibrate data

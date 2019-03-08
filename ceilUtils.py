@@ -131,7 +131,7 @@ def time_match_data(data_obs, **kwargs):
     :return: data_obs:
     """
 
-    from ellUtils.ellUtils import binary_search
+    from ellUtils import binary_search
 
     # find nearest time in ceil time
     # pull out ALL the nearest time idxs and differences
@@ -201,7 +201,7 @@ def calibrate_BSC_data(bsc_obs, site, day):
     :return:
     """
 
-    from ellUtils.ellUtils import netCDF_read
+    from ellUtils import netCDF_read
 
     # site id (short) and site str in filename
     split = site.split('_')
@@ -454,7 +454,7 @@ def netCDF_read_ceil(datapath, ins_height, ftype, **kwargs):
     from netCDF4 import Dataset
     import datetime as dt
     from dateutil import tz
-    from ellUtils.ellUtils import time_to_datetime, get_all_varaible_names
+    from ellUtils import time_to_datetime, get_all_varaible_names
 
     def masked_to_nan_array(datafile, var_i):
 
@@ -554,7 +554,7 @@ def read_all_ceils_BSC(day, site_bsc, ceilDatadir, calib=True, var_type='beta_tR
     """
 
     from os.path import exists
-    from ellUtils.ellUtils import nearest, binary_search
+    from ellUtils import nearest, binary_search
 
     # contains all the sites time-upscaled data
     bsc_obs = {}
@@ -623,7 +623,7 @@ def read_all_ceils(day, site_bsc, ceilDatadir, ftype, calib=True, **kwargs):
     """
 
     from os.path import exists
-    from ellUtils.ellUtils import nearest, binary_search, netCDF_read
+    from ellUtils import nearest, binary_search, netCDF_read
 
     # contains all the sites time-upscaled data
     all_data_obs = {}
